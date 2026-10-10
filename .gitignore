@@ -1,0 +1,17 @@
+node_modules
+dist
+.env
+.env.local
+.env.*.local
+playwright-report
+test-results
+supabase/.temp
+supabase/.branches
+*.log
+
+# Local Netlify folder
+.netlify
+
+# graphify-Cache (wird lokal neu aufgebaut)
+graphify-out/cache
+graphify-out/.graphify_python

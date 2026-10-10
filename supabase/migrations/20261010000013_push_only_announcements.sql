@@ -1,0 +1,4 @@
+-- Migration 13: Push aufs Handy nur noch für Ankündigungen/Erinnerungen (0/10/18 Uhr).
+-- Erfolge, Quests, Gutschriften usw. erscheinen weiterhin in der App, aber nicht mehr als Push.
+-- (Live eingespielt am 08.10.2026 als "push_only_announcements"; Funktionstexte siehe Supabase.)
+-- Änderung gegenüber Migration 7: in shb_dispatch_push() und shb_push_batch() zusätzlich "and type = 'announcement'".

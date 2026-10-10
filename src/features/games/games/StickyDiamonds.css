@@ -1,0 +1,548 @@
+/* Shisha Diamonds (Sticky-Slot) */
+.game-stage:has(.sd-cabinet) {
+  padding: 0;
+  background: #07060f;
+}
+.sd-cabinet {
+  position: relative;
+  /* Animationen (Gewinn-Zoom, Banner) dürfen nie über den Rand ragen – sonst zoomt iOS Safari die Seite heraus */
+  overflow: hidden;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  background:
+    radial-gradient(120% 70% at 50% -10%, rgba(168, 85, 247, 0.35), transparent 60%),
+    radial-gradient(80% 60% at 50% 120%, rgba(14, 165, 233, 0.25), transparent 70%),
+    linear-gradient(180deg, #1a0b2e, #0b0716);
+  transition: background 0.6s ease;
+}
+.sd-cabinet.free {
+  background:
+    radial-gradient(120% 70% at 50% -10%, rgba(34, 211, 238, 0.45), transparent 60%),
+    radial-gradient(80% 60% at 50% 120%, rgba(59, 130, 246, 0.35), transparent 70%),
+    linear-gradient(180deg, #071a2e, #050b16);
+}
+.sd-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: min(100%, 560px);
+  margin: 0 auto;
+}
+.sd-logo {
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  font-size: clamp(18px, 4.6vw, 26px);
+  background: linear-gradient(180deg, #fff6d5, #f3c969 45%, #b7791f);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.6)) drop-shadow(0 0 14px rgba(243, 201, 105, 0.35));
+}
+.sd-logo span {
+  background: linear-gradient(180deg, #e0f7ff, #22d3ee);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.sd-sub {
+  font-size: 12px;
+  color: #c4b5fd;
+}
+.sd-fs-badge {
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 13px;
+  color: #04202b;
+  background: linear-gradient(180deg, #a5f3fc, #22d3ee);
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.6);
+  animation: popIn 0.3s ease both;
+}
+.sd-window {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  padding: 8px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #2a1a05, #120b02);
+  box-shadow:
+    0 0 0 3px #b7791f,
+    0 0 0 5px #3b2506,
+    0 0 30px rgba(243, 201, 105, 0.25),
+    inset 0 0 40px rgba(0, 0, 0, 0.8);
+  width: min(100%, 560px);
+  margin: 4px auto 0;
+  transition: box-shadow 0.3s ease;
+}
+.sd-window.anticipate {
+  box-shadow:
+    0 0 0 3px #22d3ee,
+    0 0 0 5px #0e3a46,
+    0 0 40px rgba(34, 211, 238, 0.7),
+    inset 0 0 40px rgba(0, 0, 0, 0.8);
+  animation: sdPulse 0.5s ease-in-out infinite alternate;
+}
+.sd-reel {
+  position: relative;
+  aspect-ratio: 1 / 3;
+  overflow: hidden;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #0c0717 0%, #1c1230 18%, #241839 50%, #1c1230 82%, #0c0717 100%);
+  box-shadow:
+    inset 0 10px 14px -8px rgba(0, 0, 0, 0.9),
+    inset 0 -10px 14px -8px rgba(0, 0, 0, 0.9);
+}
+.sd-strip {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+.sd-strip.moving .sd-sym {
+  filter: blur(1.4px) brightness(1.1);
+}
+.sd-cell {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  padding: 9%;
+  transition: opacity 0.25s ease;
+}
+.sd-cell.dim {
+  opacity: 0.35;
+}
+.sd-cell.win .sd-sym {
+  animation: sdWin 0.7s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 10px rgba(255, 230, 150, 0.9));
+}
+.sd-sym {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.55));
+}
+.sd-sym.sd-wild {
+  filter: drop-shadow(0 0 8px rgba(103, 232, 249, 0.75));
+}
+.sd-sym.sd-star {
+  filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.7));
+}
+.sd-sticky {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: calc(100% / 3);
+  display: grid;
+  place-items: center;
+  padding: 9%;
+  border-radius: 10px;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.35), rgba(8, 47, 73, 0.92));
+  box-shadow:
+    inset 0 0 0 2px #67e8f9,
+    0 0 16px rgba(34, 211, 238, 0.7);
+  animation: sdStick 0.35s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  z-index: 2;
+}
+.sd-lines {
+  position: absolute;
+  inset: 8px;
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
+  pointer-events: none;
+  z-index: 3;
+}
+.sd-lines polyline {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.9;
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: sdDraw 0.6s ease-out forwards;
+  vector-effect: non-scaling-stroke;
+}
+.sd-banner {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 5;
+  background: radial-gradient(circle, rgba(8, 47, 73, 0.8), rgba(0, 0, 0, 0.6));
+  border-radius: 14px;
+  animation: fadeIn 0.25s ease both;
+}
+.sd-banner > div {
+  font-weight: 900;
+  font-size: clamp(22px, 6vw, 38px);
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: 0 12px;
+  background: linear-gradient(180deg, #ffffff, #a5f3fc 40%, #22d3ee);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 18px rgba(34, 211, 238, 0.8));
+  animation: sdBanner 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+.sd-bar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  width: min(100%, 560px);
+  margin: 0 auto;
+}
+.sd-bar > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 6px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(243, 201, 105, 0.25);
+}
+.sd-bar .label {
+  font-size: 10px;
+}
+.sd-bar strong {
+  font-size: clamp(14px, 3.8vw, 18px);
+}
+.sd-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  min-height: 92px;
+}
+.sd-spin {
+  width: 84px;
+  height: 84px;
+  flex: none;
+  border-radius: 50%;
+  border: none;
+  color: #1a1205;
+  cursor: pointer;
+  background: radial-gradient(circle at 35% 30%, #fff6d5, #f3c969 45%, #b7791f);
+  box-shadow:
+    0 0 0 4px rgba(243, 201, 105, 0.25),
+    0 8px 24px rgba(243, 201, 105, 0.35),
+    inset 0 -6px 10px rgba(0, 0, 0, 0.25);
+  display: grid;
+  place-items: center;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s;
+}
+.sd-spin svg {
+  width: 42px;
+  height: 42px;
+}
+.sd-spin:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow:
+    0 0 0 6px rgba(243, 201, 105, 0.3),
+    0 10px 30px rgba(243, 201, 105, 0.5);
+}
+.sd-spin:active:not(:disabled) {
+  transform: scale(0.94);
+}
+.sd-spin.busy svg,
+.sd-spin:disabled svg {
+  animation: spin 0.8s linear infinite;
+}
+.sd-spin:disabled {
+  filter: saturate(0.6) brightness(0.85);
+  cursor: default;
+}
+.sd-turbo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--subtle);
+  cursor: pointer;
+  min-width: 90px;
+  justify-content: flex-end;
+}
+.sd-hint {
+  min-width: 90px;
+}
+.sd-gamble {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px 14px;
+  align-items: center;
+  width: min(100%, 560px);
+  margin: 0 auto;
+  padding: 12px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(20, 83, 45, 0.6), rgba(6, 30, 18, 0.8));
+  border: 1px solid rgba(74, 222, 128, 0.35);
+  animation: slideUp 0.25s ease both;
+}
+.sd-gamble .sd-collect {
+  grid-column: 1 / -1;
+}
+.sd-gamble-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.sd-gamble-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.sd-gamble-row.suits {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.sd-gbtn {
+  border: none;
+  border-radius: 10px;
+  padding: 9px 6px;
+  font-weight: 900;
+  font-size: 15px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition:
+    transform 0.1s ease,
+    filter 0.15s;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.3);
+}
+.sd-gbtn small {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+.sd-gbtn.red {
+  background: linear-gradient(180deg, #ef4444, #991b1b);
+}
+.sd-gbtn.black {
+  background: linear-gradient(180deg, #4b5563, #0b0f19);
+}
+.sd-gbtn.suit {
+  font-size: 22px;
+  padding: 5px;
+}
+.sd-gbtn:hover:not(:disabled) {
+  filter: brightness(1.15);
+}
+.sd-gbtn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+.sd-gbtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.sd-history {
+  display: flex;
+  gap: 4px;
+  min-height: 22px;
+  flex-wrap: wrap;
+}
+.sd-mini {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 5px;
+  border-radius: 5px;
+  background: #f8fafc;
+  color: #111827;
+  border-bottom: 3px solid #16a34a;
+}
+.sd-mini.red {
+  color: #b91c1c;
+}
+.sd-mini.bad {
+  border-bottom-color: #ef4444;
+}
+.sd-card-wrap {
+  position: relative;
+  width: clamp(64px, 18vw, 86px);
+  aspect-ratio: 5 / 7;
+}
+.sd-card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 9px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+}
+.sd-card-back {
+  background: repeating-linear-gradient(45deg, #6d28d9 0 6px, #7c3aed 6px 12px);
+  border: 4px solid #f3c969;
+  animation: sdShuffle 0.5s ease-in-out infinite alternate;
+}
+.sd-card-front {
+  animation: sdFlipIn 0.45s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+  background: #f8fafc;
+  color: #111827;
+  font-weight: 900;
+}
+.sd-card-front.red {
+  color: #b91c1c;
+}
+.sd-card-front .corner {
+  position: absolute;
+  top: 5px;
+  left: 7px;
+  font-size: 13px;
+  line-height: 1;
+  text-align: center;
+}
+.sd-card-front .corner.br {
+  top: auto;
+  left: auto;
+  bottom: 5px;
+  right: 7px;
+  transform: rotate(180deg);
+}
+.sd-card-front .pip {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 34px;
+}
+@media (max-width: 560px) {
+  .sd-cabinet {
+    padding: 10px;
+  }
+  .sd-sub {
+    display: none;
+  }
+  .sd-gamble {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+    padding: 10px;
+  }
+  .sd-gamble .sd-card-wrap {
+    justify-self: center;
+    width: 58px;
+  }
+  .sd-gamble-body > .small {
+    text-align: center;
+    font-size: 11px;
+  }
+  .sd-gbtn {
+    font-size: 13px;
+  }
+  .sd-history {
+    justify-content: center;
+  }
+  .sd-actions {
+    gap: 12px;
+  }
+  .sd-turbo,
+  .sd-hint {
+    min-width: 0;
+    font-size: 11px;
+  }
+}
+@keyframes sdWin {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.12);
+  }
+}
+@keyframes sdDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes sdStick {
+  from {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes sdBanner {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes sdPulse {
+  to {
+    filter: brightness(1.25);
+  }
+}
+@keyframes sdFlipIn {
+  from {
+    transform: perspective(600px) rotateY(90deg) scale(1.1);
+  }
+  to {
+    transform: perspective(600px) rotateY(0) scale(1);
+  }
+}
+@keyframes sdShuffle {
+  to {
+    transform: translateY(-3px) rotate(-1.5deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sd-cell.win .sd-sym,
+  .sd-window.anticipate,
+  .sd-card-back,
+  .sd-card-front {
+    animation: none;
+  }
+}
+
+/* Handy: unterer Bereich (Einsatz/Gewinn/Kontostand, Drehen, Risikospiel) größer und angenehmer zu bedienen */
+@media (max-width: 560px) {
+  .sd-bar {
+    gap: 6px;
+  }
+  .sd-bar > div {
+    padding: 12px 6px;
+    gap: 4px;
+  }
+  .sd-bar .label {
+    font-size: 11px;
+  }
+  .sd-bar strong {
+    font-size: 19px;
+  }
+  .sd-actions {
+    min-height: 112px;
+  }
+  .sd-spin {
+    width: 100px;
+    height: 100px;
+  }
+  .sd-spin svg {
+    width: 48px;
+    height: 48px;
+  }
+  .sd-turbo,
+  .sd-hint {
+    font-size: 13px;
+  }
+  .sd-gbtn {
+    min-height: 48px;
+    font-size: 15px;
+  }
+  .sd-collect {
+    min-height: 52px;
+  }
+}

@@ -1,0 +1,313 @@
+/* ---------- Pferderennen */
+.race {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #14532d, #052e16);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+.race-lane {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr) 22px;
+  align-items: center;
+  gap: 6px;
+}
+.race-lane.mine .race-name {
+  color: var(--gold-bright);
+  font-weight: 800;
+}
+.race-name {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.race-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+.race-track {
+  position: relative;
+  height: 34px;
+  border-radius: 8px;
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px 40px), #3f2a12;
+  overflow: hidden;
+}
+.race-finish {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: repeating-linear-gradient(0deg, #fff 0 5px, #111 5px 10px);
+}
+.race-horse {
+  position: absolute;
+  top: 1px;
+  font-size: 26px;
+  line-height: 32px;
+  transform: scaleX(-1);
+}
+.race-horse .gallop {
+  display: inline-block;
+  animation: gallop 0.22s ease-in-out infinite alternate;
+}
+.race-place {
+  font-weight: 800;
+  font-size: 12px;
+  color: var(--gold-bright);
+}
+@keyframes gallop {
+  from {
+    transform: translateY(0) rotate(-3deg);
+  }
+  to {
+    transform: translateY(-3px) rotate(3deg);
+  }
+}
+.horse-pick {
+  display: grid;
+  gap: 6px;
+}
+.horse-pick button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.horse-pick button[aria-pressed='true'] {
+  border-color: var(--gold);
+  background: rgba(243, 201, 105, 0.1);
+}
+
+/* ---------- Hütchenspiel */
+.cups {
+  position: relative;
+  height: 190px;
+  max-width: 360px;
+  margin: 10px auto 0;
+  border-radius: 16px;
+  background: radial-gradient(ellipse at 50% 90%, #1e3a2a, #0b1510 70%);
+}
+.cup-slot {
+  position: absolute;
+  bottom: 24px;
+  width: 33.333%;
+  display: grid;
+  justify-items: center;
+  transition: left 0.3s cubic-bezier(0.5, 0, 0.3, 1);
+}
+.cup {
+  width: 78px;
+  height: 90px;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.35s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+.cup svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.5));
+}
+.cup.lifted {
+  transform: translateY(-58px) rotate(-8deg);
+}
+.cup.picked {
+  outline: 2px dashed var(--gold);
+  outline-offset: 6px;
+  border-radius: 10px;
+}
+.ball {
+  position: absolute;
+  bottom: 4px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff6d5, #f3c969 50%, #92400e);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.ball.shown {
+  opacity: 1;
+}
+
+/* ---------- Diamonds */
+.gem-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  width: min(100%, 420px);
+  margin: 6px auto 0;
+}
+.gem-slot {
+  aspect-ratio: 1;
+  border-radius: 14px;
+  background: radial-gradient(circle, #1e293b, #0f172a);
+  border: 1px solid var(--border);
+  display: grid;
+  place-items: center;
+  transition: box-shadow 0.3s, border-color 0.3s;
+}
+.gem-slot.hl {
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 18px rgba(243, 201, 105, 0.45);
+}
+.gem {
+  width: 74%;
+  height: 74%;
+  opacity: 0;
+  animation: gemDrop 0.45s cubic-bezier(0.3, 1.5, 0.5, 1) forwards;
+}
+@keyframes gemDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.6) rotate(-20deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.gem-table {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.gem-table span {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--card-2);
+  color: var(--subtle);
+}
+.gem-table span.on {
+  background: var(--grad-gold);
+  color: #2a1c06;
+}
+
+/* ---------- Pump */
+.pump-stage {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 10px 0;
+}
+.pump-mult {
+  font-size: clamp(30px, 9vw, 46px);
+  font-weight: 900;
+  color: var(--gold-bright);
+}
+.pump-area {
+  height: 220px;
+  width: 100%;
+  display: grid;
+  place-items: end center;
+}
+.balloon {
+  width: 150px;
+  height: 200px;
+  transform-origin: 50% 90%;
+  transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.balloon.puff {
+  animation: puff 0.3s ease;
+}
+@keyframes puff {
+  50% {
+    filter: brightness(1.2);
+  }
+}
+.pump-pop {
+  position: relative;
+  width: 160px;
+  height: 200px;
+  display: grid;
+  place-items: center;
+}
+.pump-pop b {
+  font-size: 70px;
+  animation: popIn 0.3s ease both;
+}
+.pump-pop span {
+  position: absolute;
+  width: 8px;
+  height: 18px;
+  border-radius: 4px;
+  background: #f43f5e;
+  animation: shard 0.5s ease-out both;
+}
+@keyframes shard {
+  from {
+    opacity: 1;
+    translate: 0 0;
+  }
+  to {
+    opacity: 0;
+    translate: 0 -30px;
+  }
+}
+.pump-bar {
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  gap: 3px;
+  width: min(100%, 420px);
+}
+.pump-bar span {
+  height: 8px;
+  border-radius: 3px;
+  background: var(--card-2);
+}
+.pump-bar span.on {
+  background: var(--success);
+}
+.pump-bar span.pop {
+  background: var(--danger);
+}
+
+/* ---------- Jackpot */
+.jp-banner {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 12px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #3b0764, #1e1b4b);
+  border: 1px solid rgba(243, 201, 105, 0.5);
+  box-shadow: 0 0 24px rgba(168, 85, 247, 0.35);
+}
+.jp-pot {
+  font-size: clamp(26px, 8vw, 40px);
+  font-weight: 900;
+  color: var(--gold-bright);
+  text-shadow: 0 0 18px rgba(243, 201, 105, 0.6);
+}
+.jp-banner.hit {
+  animation: jpHit 0.6s ease-in-out 4 alternate;
+}
+@keyframes jpHit {
+  to {
+    box-shadow: 0 0 60px rgba(243, 201, 105, 0.9);
+    transform: scale(1.04);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .race-horse .gallop,
+  .gem,
+  .jp-banner.hit,
+  .pump-pop span {
+    animation: none;
+    opacity: 1;
+  }
+}

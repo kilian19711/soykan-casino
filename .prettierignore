@@ -1,0 +1,5 @@
+dist
+node_modules
+supabase/migrations
+package-lock.json
+graphify-out

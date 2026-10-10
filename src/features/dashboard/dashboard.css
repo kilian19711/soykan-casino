@@ -1,0 +1,210 @@
+/* Dashboard: Zuletzt gespielt, Mini-Leaderboard, Wochenaufgabe */
+.recent-games {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+.recent-game {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px 8px 8px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.recent-game:hover {
+  transform: translateY(-2px);
+  border-color: rgba(243, 201, 105, 0.5);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+.recent-game .art {
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border-radius: 10px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+.recent-game .art svg {
+  width: 100%;
+  height: 100%;
+}
+.recent-game .meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.recent-game .play {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: #1a1205;
+  background: var(--grad-gold);
+  box-shadow: 0 0 12px rgba(243, 201, 105, 0.35);
+}
+
+.mini-board {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.mini-board li {
+  display: grid;
+  grid-template-columns: 26px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 10px;
+  background: var(--card-2);
+  font-size: 14px;
+}
+.mini-board li.me {
+  background: rgba(79, 142, 247, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(79, 142, 247, 0.45);
+}
+.mini-board li.lowest {
+  background: rgba(239, 68, 68, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.4);
+}
+.mini-board .pos {
+  font-family: var(--mono);
+  font-weight: 800;
+  text-align: center;
+  color: var(--subtle);
+}
+.mini-board .pos.top1 {
+  color: #f3c969;
+}
+.mini-board .pos.top2 {
+  color: #cbd5e1;
+}
+.mini-board .pos.top3 {
+  color: #d6a26b;
+}
+.mini-board .who {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.mini-board .lowest-icon {
+  color: var(--danger);
+  flex: none;
+}
+.mini-board .bal {
+  font-size: 13px;
+}
+
+.task-card {
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(243, 201, 105, 0.12), transparent 60%),
+    var(--card);
+}
+.task-hero {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  color: #2a1c06;
+  background: var(--grad-gold);
+  box-shadow:
+    0 10px 24px rgba(216, 168, 78, 0.25),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.12);
+}
+.task-hero .small {
+  opacity: 0.75;
+  font-weight: 600;
+}
+.task-icon {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(42, 28, 6, 0.12);
+  animation: taskWiggle 2.6s ease-in-out infinite;
+}
+.task-title {
+  display: block;
+  font-size: clamp(18px, 4.6vw, 22px);
+  font-weight: 900;
+  line-height: 1.15;
+}
+.task-lowest {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.22), rgba(239, 68, 68, 0.08));
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+.task-lowest .mono {
+  font-weight: 800;
+  color: #fca5a5;
+}
+@keyframes taskWiggle {
+  0%,
+  80%,
+  100% {
+    transform: rotate(0);
+  }
+  85% {
+    transform: rotate(-8deg);
+  }
+  90% {
+    transform: rotate(8deg);
+  }
+  95% {
+    transform: rotate(-4deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .task-icon {
+    animation: none;
+  }
+}
+
+/* Kopfbereich: Begrüßung links, Abrechnungs-Countdown kompakt oben rechts */
+.dash-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.dash-period {
+  flex: none;
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  font-size: 13px;
+  line-height: 1.2;
+}
+.dash-period .label {
+  font-size: 10px;
+}
